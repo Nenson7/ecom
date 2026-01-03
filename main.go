@@ -2,21 +2,33 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+	"html/template"
 )
 
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","application/html")
-
+type PageData struct {
+	Title string
 }
 
 func main() {
-	http.HandleFunc("/", handleRoot)
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("templates/index.html"))
+		data := PageData{
+			Title: "My title",
+		}
+		tmpl.Execute(w, data)
+	})
+
+
+	http.HandleFunc("/clicked", func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte("<p>you have clicked</p>"))
+    })
 
 	fmt.Println("Server running on localhost:8080")
-
 	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal("Server starting failure", err)
+		fmt.Println("Server starting failure", err)
 	}
 }

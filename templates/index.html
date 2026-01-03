@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ .Title }}</title>
+    <script src="/static/htmx.min.js"></script>
+    <link rel="stylesheet" href="/static/output.css" />
+  </head>
+  <body>
+    <div class="m-4">
+      <div id="result" class="bg-green-700 text-white rounded-sm p-3 mb-2">
+        <p>hello from server</p>
+      </div>
+      <button
+        hx-post="/clicked"
+        hx-target="#result"
+        hx-swap="innerHTML"
+        class="p-3 bg-gray-400 rounded-sm"
+      >
+        Clickme
+      </button>
+    </div>
+  </body>
+</html>
